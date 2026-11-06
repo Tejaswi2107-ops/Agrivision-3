@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#176b45">
+<title>AgriVision AI | Smart Crop Health</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f8f4;color:#193629}
+button,input,select{font:inherit}
+button{cursor:pointer}
+:root{--green:#176b45;--light:#e8f3e9;--muted:#738078}
+header{height:70px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 6%;border-bottom:1px solid #e3ebe4;position:sticky;top:0;z-index:10}
+.logo{font-size:22px;font-weight:800;color:var(--green)}
+.logo span{color:#8bbd91}
+nav{display:flex;gap:10px}
+nav button{border:0;background:white;padding:10px 14px;border-radius:9px;color:#53665a;font-weight:bold}
+nav button.active,nav button:hover{background:var(--light);color:var(--green)}
+.container{max-width:1150px;margin:auto;padding:30px 22px}
+h1{font-size:32px;margin-bottom:10px}
+h2{font-size:22px;margin-bottom:10px}
+p{color:var(--muted);line-height:1.6}
+.hero{background:linear-gradient(120deg,#145b39,#328d58);color:white;border-radius:22px;padding:45px 35px;margin:20px 0 30px}
+.hero h1{font-size:36px;max-width:550px}
+.hero p{color:#e0f0e4;margin:12px 0 22px;max-width:550px}
+.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:bold}
+.primary{background:var(--green);color:white}
+.white{background:white;color:var(--green)}
+.outline{background:white;border:1px solid #d6e5d9;color:var(--green)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:white;border:1px solid #e2ebe3;border-radius:16px;padding:20px}
+.crop-card{display:flex;align-items:center;gap:15px;text-align:left;border:1px solid #e2ebe3;background:white;border-radius:15px;padding:17px;transition:.2s}
+.crop-card:hover{border-color:#83b890;transform:translateY(-2px)}
+.emoji{font-size:32px}
+.crop-card b{display:block;margin-bottom:5px}
+.crop-card small{color:var(--muted)}
+.feature{margin-top:25px}
+.feature .card{line-height:1.6}
+.feature-icon{font-size:25px;margin-bottom:10px}
+.notice{background:#fff7e7;border:1px solid #f1dfb7;color:#80601d;padding:15px;border-radius:12px;margin-top:20px;font-size:13px;line-height:1.6}
+.page{display:none}
+.page.active{display:block}
+.field{margin:18px 0}
+label{font-weight:bold;display:block;margin-bottom:9px}
+select{width:100%;padding:13px;border:1px solid #dce8de;border-radius:10px;background:white}
+.upload{border:2px dashed #b8d3bd;border-radius:15px;background:#f8fbf8;padding:35px 15px;text-align:center}
+.upload input{max-width:100%;margin:15px auto}
+.preview{max-width:100%;max-height:300px;border-radius:12px;margin-top:15px;display:none}
+.full{width:100%;margin-top:15px}
+.result-image{width:100%;max-height:240px;object-fit:contain;background:#edf4ee;border-radius:12px;margin-bottom:15px}
+.result-box{background:#fff8e9;border:1px solid #f1dfb7;color:#80601d;border-radius:12px;padding:15px;margin-bottom:18px;font-size:13px;line-height:1.6}
+.result-box p{color:#80601d}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}
+.report-card h3{margin:10px 0}
+.report-card li{margin:9px 0 9px 18px;color:#596b60;line-height:1.5;font-size:14px}
+.history-item{display:flex;gap:15px;align-items:center;margin:12px 0;cursor:pointer}
+.history-item img{width:75px;height:75px;object-fit:cover;border-radius:10px}
+.history-item div{flex:1}
+.history-item small{color:var(--muted)}
+.empty{text-align:center;padding:55px 15px}
+footer{text-align:center;padding:25px;color:#829087;font-size:12px}
+@media(max-width:700px){
+ header{padding:0 12px;height:auto;min-height:65px;flex-wrap:wrap}
+ .logo{font-size:18px}
+ nav{width:100%;overflow-x:auto;padding:7px 0}
+ nav button{font-size:12px;white-space:nowrap;padding:9px}
+ .container{padding:20px 14px}
+ .hero{padding:30px 22px}
+ .hero h1{font-size:28px}
+ h1{font-size:27px}
+ .grid{grid-template-columns:1fr 1fr;gap:9px}
+ .crop-card{padding:12px;gap:8px}
+ .emoji{font-size:25px}
+ .report-grid{grid-template-columns:1fr}
+}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">🌱 AgriVision <span>AI</span></div>
+ <nav>
+  <button class="active" onclick="showPage('home',this)">Home</button>
+  <button onclick="showPage('scan',this)">Scan Crop</button>
+  <button onclick="showPage('history',this)">History</button>
+  <button onclick="showPage('about',this)">About</button>
+ </nav>
+</header>
+
+<main class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+ <p>SMART AGRICULTURE PLATFORM</p>
+ <h1>Welcome to AgriVision AI 🌿</h1>
+ <p>Your smart crop health companion. Explore common crop diseases and learn about responsible crop care.</p>
+
+ <div class="hero">
+  <h1>Healthy crops start with early detection.</h1>
+  <p>Upload a crop leaf photograph to explore sample disease information, symptoms, severity and management guidance.</p>
+  <button class="btn white" onclick="showPage('scan')">📷 Scan Your Crop →</button>
+ </div>
+
+ <div class="section-head">
+  <div>
+   <h2>Explore Crops</h2>
+   <p>Select a crop to begin.</p>
+  </div>
+ </div>
+
+ <div class="grid" id="cropGrid"></div>
+
+ <div class="feature">
+  <h2>Our Features</h2>
+  <div class="grid">
+   <div class="card"><div class="feature-icon">📷</div><b>Crop Image Upload</b><p>Upload photographs from your device.</p></div>
+   <div class="card"><div class="feature-icon">🔬</div><b>Disease Information</b><p>Explore common crop symptoms and disease information.</p></div>
+   <div class="card"><div class="feature-icon">🌱</div><b>Crop Management</b><p>Learn about prevention and management practices.</p></div>
+  </div>
+ </div>
+
+ <div class="notice">
+  <b>Prototype notice:</b> This version displays sample crop information. It does not use a trained AI model to diagnose uploaded photographs.
+ </div>
+</section>
+
+<!-- SCAN -->
+<section id="scan" class="page">
+ <h1>Crop Health Scanner 📷</h1>
+ <p>Choose your crop and upload a clear photograph.</p>
+
+ <div class="card" style="margin-top:20px">
+  <div class="field">
+   <label for="cropSelect">1. Select crop</label>
+   <select id="cropSelect">
+    <option>Tomato</option>
+    <option>Rice</option>
+    <option>Potato</option>
+    <option>Wheat</option>
+    <option>Chilli</option>
+    <option>Maize</option>
+   </select>
+  </div>
+
+  <div class="field">
+   <label>2. Upload crop image</label>
+   <div class="upload">
+    <div style="font-size:35px">🖼️</div>
+    <b>Choose a crop photograph</b>
+    <p>JPG, PNG or WEBP</p>
+    <input id="photo" type="file" accept="image/*" capture="environment">
+    <img id="preview" class="preview" alt="Selected crop preview">
+   </div>
+  </div>
+
+  <button id="analyseBtn" class="btn primary full" onclick="analyse()" disabled>
+   Analyse Crop →
+  </button>
+
+  <p style="font-size:12px;margin-top:12px">
+   Your image preview is handled in your browser in this demo.
+  </p>
+ </div>
+
+ <div class="notice">
+  The report is illustrative sample information, not a genuine AI diagnosis.
+ </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="page">
+ <button class="btn outline" onclick="showPage('scan')">← Back to scanner</button>
+ <h1 style="margin-top:20px">Crop Health Report</h1>
+
+ <div class="result-box">
+  <b>⚠ DEMO RESULT — NOT AN AI DIAGNOSIS</b>
+  <p>This report contains sample information for the selected crop. Your uploaded photograph has not been analysed by a trained AI model.</p>
+ </div>
+
+ <div class="card">
+  <img id="resultImage" class="result-image" alt="Uploaded crop">
+  <p id="resultCrop"></p>
+  <h2 id="diseaseName"></h2>
+  <p id="diseaseAbout"></p>
+  <p style="margin-top:12px"><b>Severity:</b> <span id="severity"></span></p>
+ </div>
+
+ <div class="report-grid">
+  <div class="card report-card">
+   <div style="font-size:24px">🔍</div>
+   <h3>Symptoms</h3>
+   <ul id="symptoms"></ul>
+  </div>
+  <div class="card report-card">
+   <div style="font-size:24px">🌿</div>
+   <h3>Organic Management</h3>
+   <ul id="organic"></ul>
+  </div>
+  <div class="card report-card">
+   <div style="font-size:24px">🧪</div>
+   <h3>Chemical Management</h3>
+   <ul id="chemical"></ul>
+  </div>
+  <div class="card report-card">
+   <div style="font-size:24px">🛡️</div>
+   <h3>Prevention</h3>
+   <ul id="prevention"></ul>
+  </div>
+ </div>
+
+ <div class="notice">
+  <b>Safety:</b> Confirm the disease with a qualified local agricultural expert before choosing any crop-protection product. Follow current local product labels. Do not apply pesticides based only on this sample report.
+ </div>
+
+ <button class="btn primary full" onclick="showPage('scan')">Scan Another Crop</button>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="page">
+ <h1>Scan History</h1>
+ <p>Your previously viewed sample reports.</p>
+ <div id="historyList" style="margin-top:20px"></div>
+ <button class="btn outline" onclick="clearHistory()">Clear History</button>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="page">
+ <h1>About AgriVision AI 🌱</h1>
+ <div class="card" style="margin-top:20px">
+  <h2>Our Mission</h2>
+  <p>AgriVision AI aims to make crop health information easier to understand and access through technology.</p>
+  <br>
+  <h2>Project Features</h2>
+  <ul style="margin:15px 0 15px 20px;line-height:2">
+   <li>Multiple crop categories.</li>
+   <li>Crop photograph upload.</li>
+   <li>Crop disease information.</li>
+   <li>Symptoms and severity information.</li>
+   <li>Organic and chemical management guidance.</li>
+   <li>Prevention practices.</li>
+   <li>Local scan history.</li>
+  </ul>
+  <h2>Future Development</h2>
+  <p>A validated machine-learning model, real disease classification, expert-reviewed recommendations and regional language support can be integrated in future versions.</p>
+ </div>
+ <div class="notice">
+  This is a front-end project prototype. AI diagnosis and backend services are not connected.
+ </div>
+</section>
+
+</main>
+
+<footer>
+ © 2026 AgriVision AI · Smart Agriculture Project · Prototype Version
+</footer>
+
+<script>
+const crops = [
+ {name:"Tomato",emoji:"🍅",type:"Vegetable"},
+ {name:"Rice",emoji:"🌾",type:"Cereal"},
+ {name:"Potato",emoji:"🥔",type:"Tuber"},
+ {name:"Wheat",emoji:"🌿",type:"Cereal"},
+ {name:"Chilli",emoji:"🌶️",type:"Spice"},
+ {name:"Maize",emoji:"🌽",type:"Cereal"}
+];
+
+const diseaseData = {
+ Tomato:{
+  name:"Early Blight (Sample)",
+  severity:"Moderate — sample",
+  about:"Early blight is a common fungal disease of tomato. Other conditions can cause similar symptoms, so expert confirmation may be needed.",
+  symptoms:[
+   "Brown circular spots may develop concentric rings.",
+   "Yellowing may occur around affected areas.",
+   "Older leaves are often affected first."
+  ],
+  organic:[
+   "Remove heavily affected leaves where appropriate.",
+   "Water near the soil instead of wetting foliage.",
+   "Maintain suitable plant spacing for airflow."
+  ],
+  chemical:[
+   "Ask a local agricultural expert about currently registered products.",
+   "Use only products labelled for tomato and follow all label directions."
+  ],
+  prevention:[
+   "Use healthy seedlings.",
+   "Rotate crops where practical.",
+   "Inspect lower leaves regularly."
+  ]
+ },
+ Rice:{
+  name:"Rice Blast (Sample)",
+  severity:"Moderate — sample",
+  about:"Rice blast is a fungal disease that may affect leaves, nodes and panicles.",
+  symptoms:[
+   "Spindle-shaped lesions may appear on leaves.",
+   "Lesions may have grey centres and brown margins.",
+   "Infection can affect panicles."
+  ],
+  organic:[
+   "Use healthy seeds.",
+   "Choose locally recommended resistant varieties.",
+   "Maintain balanced crop nutrition."
+  ],
+  chemical:[
+   "Consult local agricultural extension staff for registered options.",
+   "Follow the approved product label."
+  ],
+  prevention:[
+   "Choose suitable local varieties.",
+   "Apply balanced fertilizer.",
+   "Monitor fields regularly."
+  ]
+ },
+ Potato:{
+  name:"Early Blight (Sample)",
+  severity:"Moderate — sample",
+  about:"Early blight can affect potato foliage. Similar symptoms may have other causes.",
+  symptoms:[
+   "Brown spots may show concentric rings.",
+   "Older leaves are commonly affected first.",
+   "Yellowing can occur around lesions."
+  ],
+  organic:[
+   "Remove affected plant debris where appropriate.",
+   "Avoid prolonged leaf wetness.",
+   "Maintain good crop spacing."
+  ],
+  chemical:[
+   "Seek local expert advice about registered potato products.",
+   "Follow current product-label directions."
+  ],
+  prevention:[
+   "Use healthy seed tubers.",
+   "Rotate crops where practical.",
+   "Monitor lower leaves."
+  ]
+ },
+ Wheat:{
+  name:"Leaf Rust (Sample)",
+  severity:"Mild — sample",
+  about:"Leaf rust is a fungal disease that can produce rust-coloured pustules on wheat leaves.",
+  symptoms:[
+   "Small orange-brown pustules may appear.",
+   "Pustules can become more numerous.",
+   "Infection can reduce green leaf area."
+  ],
+  organic:[
+   "Use locally recommended resistant varieties.",
+   "Monitor crops regularly.",
+   "Follow local crop-management advice."
+  ],
+  chemical:[
+   "Consult an agricultural expert about registered wheat products.",
+   "Follow the current product label."
+  ],
+  prevention:[
+   "Choose resistant varieties where available.",
+   "Scout fields regularly.",
+   "Follow local sowing recommendations."
+  ]
+ },
+ Chilli:{
+  name:"Leaf Spot (Sample)",
+  severity:"Mild — sample",
+  about:"Leaf spots can be caused by several pathogens and environmental stresses.",
+  symptoms:[
+   "Small dark or brown spots may appear.",
+   "Spots may enlarge or merge.",
+   "Yellowing may surround some lesions."
+  ],
+  organic:[
+   "Remove affected debris where appropriate.",
+   "Avoid wetting foliage during irrigation.",
+   "Improve plant spacing."
+  ],
+  chemical:[
+   "Confirm the cause with a local expert.",
+   "Use only locally registered products."
+  ],
+  prevention:[
+   "Use healthy planting material.",
+   "Rotate crops where practical.",
+   "Inspect leaves regularly."
+  ]
+ },
+ Maize:{
+  name:"Leaf Blight (Sample)",
+  severity:"Moderate — sample",
+  about:"Leaf blight is a sample disease category. Expert confirmation may be needed to identify the cause.",
+  symptoms:[
+   "Elongated tan or brown lesions may occur.",
+   "Lesions may expand along the leaf.",
+   "Severe damage can reduce green leaf area."
+  ],
+  organic:[
+   "Use locally recommended tolerant varieties.",
+   "Manage infected crop residue appropriately.",
+   "Maintain balanced crop nutrition."
+  ],
+  chemical:[
+   "Seek local expert confirmation.",
+   "Follow registered-product label directions."
+  ],
+  prevention:[
+   "Rotate crops where practical.",
+   "Use healthy seed.",
+   "Scout fields regularly."
+  ]
+ }
+};
+
+let selectedImage = "";
+let selectedFile = "";
+let history = [];
+
+try {
+ history = JSON.parse(localStorage.getItem("agrivisionHistory") || "[]");
+} catch(e) {
+ history = [];
+}
+
+function showPage(id,button){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ if(button) button.classList.add("active");
+ if(id==="history") renderHistory();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openScanner(crop){
+ document.getElementById("cropSelect").value=crop;
+ showPage("scan");
+}
+
+function renderCrops(){
+ const grid=document.getElementById("cropGrid");
+ grid.innerHTML=crops.map(c=>`
+  <button class="crop-card" onclick="openScanner('${c.name}')">
+   <span class="emoji">${c.emoji}</span>
+   <span><b>${c.name}</b><small>${c.type}</small></span>
+  </button>
+ `).join("");
+}
+
+document.getElementById("photo").addEventListener("change",function(e){
+ const file=e.target.files[0];
+ if(!file)return;
+
+ if(!file.type.startsWith("image/")){
+  alert("Please select an image file.");
+  return;
+ }
+
+ if(selectedImage) URL.revokeObjectURL(selectedImage);
+ selectedImage=URL.createObjectURL(file);
+ selectedFile=file.name;
+
+ const preview=document.getElementById("preview");
+ preview.src=selectedImage;
+ preview.style.display="block";
+
+ document.getElementById("analyseBtn").disabled=false;
+});
+
+function fillList(id,items){
+ document.getElementById(id).innerHTML=items.map(x=>`<li>${x}</li>`).join("");
+}
+
+function analyse(){
+ if(!selectedImage){
+  alert("Please upload a crop photograph first.");
+  return;
+ }
+
+ const crop=document.getElementById("cropSelect").value;
+ const data=diseaseData[crop];
+
+ document.getElementById("resultImage").src=selectedImage;
+ document.getElementById("resultCrop").textContent=crop+" · SAMPLE CROP INFORMATION";
+ document.getElementById("diseaseName").textContent=data.name;
+ document.getElementById("diseaseAbout").textContent=data.about;
+ document.getElementById("severity").textContent=data.severity;
+
+ fillList("symptoms",data.symptoms);
+ fillList("organic",data.organic);
+ fillList("chemical",data.chemical);
+ fillList("prevention",data.prevention);
+
+ const record={
+  id:Date.now(),
+  crop:crop,
+  disease:data.name,
+  severity:data.severity,
+  image:selectedImage,
+  date:new Date().toLocaleString()
+ };
+
+ history.unshift(record);
+ history=history.slice(0,30);
+
+ try{
+  localStorage.setItem("agrivisionHistory",JSON.stringify(history));
+ }catch(e){
+  console.log("History could not be saved.");
+ }
+
+ showPage("result");
+}
+
+function renderHistory(){
+ const box=document.getElementById("historyList");
+
+ if(history.length===0){
+  box.innerHTML='<div class="card empty"><h2>📋 No scans yet</h2><p>Your reports will appear here after a sample scan.</p></div>';
+  return;
+ }
+
+ box.innerHTML=history.map(item=>`
+  <div class="card history-item">
+   <img src="${item.image}" alt="Crop image">
+   <div>
+    <b>${item.crop} — ${item.disease}</b>
+    <br><small>${item.date}</small>
+    <br><small>${item.severity}</small>
+   </div>
+  </div>
+ `).join("");
+}
+
+function clearHistory(){
+ if(!confirm("Clear all saved scan history?"))return;
+ history=[];
+ localStorage.removeItem("agrivisionHistory");
+ renderHistory();
+}
+
+renderCrops();
+</script>
+
+</body>
+</html>
